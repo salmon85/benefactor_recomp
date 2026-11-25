@@ -49,6 +49,8 @@ def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--cc", default=os.environ.get("CC", "cc"),
                     help='compiler command for the bank dumper (e.g. "zig cc")')
+    ap.add_argument("--cc-arg", action="append", default=[],
+                    help="extra argument placed after --cc (repeatable; use for 'cc' of 'zig cc')")
     ap.add_argument("--python", default=sys.executable)
     ap.add_argument("--force", action="store_true")
     args = ap.parse_args()
@@ -77,7 +79,7 @@ def main() -> int:
     exe = "dumpbanks.exe" if os.name == "nt" else "dumpbanks"
     dumper = scratch / exe
 
-    cc = shlex.split(args.cc, posix=(os.name != "nt"))
+    cc = shlex.split(args.cc, posix=(os.name != "nt")) + list(args.cc_arg)
     print("[regen] building bootstrap dumper")
     sh(cc + ["-O2", "-I", "src",
              "tools/dump_banks.c", "src/engine/overlay_load.c", "src/engine/disk_boot.c",

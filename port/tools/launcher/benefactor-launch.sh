@@ -40,12 +40,16 @@ FORCE=0
 ANY_DISKS=0
 GAME_ARGS=()
 ADF_ARGS=()
-for arg in "$@"; do
-  case "$arg" in
-    --rebuild) FORCE=1 ;;
-    --any-disks) ANY_DISKS=1 ;;
-    -*) GAME_ARGS+=("$arg") ;;
-    *) ADF_ARGS+=("$arg") ;;
+while [ $# -gt 0 ]; do
+  case "$1" in
+    --rebuild)   FORCE=1; shift ;;
+    --any-disks) ANY_DISKS=1; shift ;;
+    --level|--load)
+      [ $# -ge 2 ] || die "$1 needs a value"
+      GAME_ARGS+=("$1" "$2"); shift 2 ;;
+    *)
+      if [ -f "$1" ]; then ADF_ARGS+=("$1"); else GAME_ARGS+=("$1"); fi
+      shift ;;
   esac
 done
 
@@ -190,8 +194,7 @@ build_game() {
 
   say "translating the game's 68000 code from your disks (about a minute)"
   ( cd "$SRC_DIR/port" \
-    && PYTHON="$py" PATH="$KIT/cmake/bin:$KIT/bin:$PATH" \
-       bash tools/regen.sh ) >>"$LOG" 2>&1 \
+    && "$py" tools/regen.py --cc "$zigcc" --python "$py" ) >>"$LOG" 2>&1 \
     || die "bank regeneration failed; see $LOG"
 
   say "building benefactor-pc"

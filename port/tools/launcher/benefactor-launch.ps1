@@ -159,7 +159,7 @@ function Build-Game {
     Say "translating the game's 68000 code from your disks (a few minutes)"
     Push-Location $port
     try {
-        & $py 'tools\regen.py' --cc "`"$zig`" cc" *>> $Log
+        & $py 'tools\regen.py' --cc "$zig" --cc-arg cc --python $py *>> $Log
         if ($LASTEXITCODE -ne 0) { Die "bank regeneration failed; see $Log" }
 
         Say 'building benefactor-pc.exe'

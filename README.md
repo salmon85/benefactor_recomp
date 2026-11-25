@@ -31,6 +31,29 @@ different disks; the native loader handles that layout explicitly. Other
 versions of the disks (including WHDLoad images) are not supported by the
 current loader.
 
+## Quick start: one-step launchers
+
+Download the launcher for your platform from the
+[latest release](https://github.com/salmon85/benefactor_recomp/releases/latest).
+It asks for the three ADFs, downloads the source and a self-contained build kit
+(cmake, ninja, Zig compiler, Python + capstone, SDL2), builds the game and runs
+it. Nothing is installed system-wide.
+
+```sh
+# Linux x86_64
+chmod +x benefactor-launch.sh
+./benefactor-launch.sh
+```
+
+```powershell
+# Windows x86_64 (PowerShell 5.1, Windows 10 1803+)
+powershell -ExecutionPolicy Bypass -File .\benefactor-launch.ps1
+```
+
+Both accept explicit disk paths and pass game options through
+(`--level 12`, `--credits`, `--headless` / `-Level 12`). Details:
+`port/tools/launcher/README.md`.
+
 ## Build
 
 Requires CMake ≥ 3.20, Ninja or Make, a C/C++ compiler, and SDL2
