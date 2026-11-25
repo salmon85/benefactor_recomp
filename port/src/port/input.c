@@ -116,6 +116,17 @@ const char *pc_input_code_name(int dev, int code)
 
 /* ── Binding parse ──────────────────────────────────────────────────────────── */
 
+/* Pad axis direction names ("LeftX-", "RightY+") end in '+' or '-', and '+' is
+ * also the chord separator. When the token just parsed is a bare axis name and
+ * the next character is a '+' sign, that '+' belongs to the token, not to a
+ * chord — otherwise every POSITIVE axis direction (right / stick down) silently
+ * fails to parse while the negative ones work. */
+static int pad_axis_base(const char *t)
+{
+    return !strcasecmp(t, "LeftX") || !strcasecmp(t, "LeftY")
+        || !strcasecmp(t, "RightX") || !strcasecmp(t, "RightY");
+}
+
 /* Parse "X+Down, C, RShift" → chords (token resolver per device). */
 static void parse_binding(int dev, const char *p, Binding *b)
 {
@@ -128,6 +139,10 @@ static void parse_binding(int dev, const char *p, Binding *b)
             while (*p && *p != '+' && *p != ',' && ti < 23) tok[ti++] = *p++;
             while (ti > 0 && tok[ti - 1] == ' ') ti--;       /* trim trailing */
             tok[ti] = 0;
+            if (dev == PI_DEV_PAD && *p == '+' && ti > 0 && ti < 23 && pad_axis_base(tok)) {
+                tok[ti++] = *p++;                            /* fold the sign in */
+                tok[ti] = 0;
+            }
             int code = (dev == PI_DEV_PAD) ? pad_from_name(tok) : key_from_name(tok);
             int ok   = (dev == PI_DEV_PAD) ? (code >= 0) : (code != 0);
             if (ok && c.n < MAX_KEYS_PER_CHORD) c.sym[c.n++] = code;
