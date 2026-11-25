@@ -9,7 +9,11 @@
 #include "render/native_renderer.h"
 #include "port/port.h"   /* level/world layout accessors (single source of truth) */
 #include <signal.h>
+#ifdef _WIN32
+#include "platform/win32_compat.h"   /* alarm()/SIGALRM + usleep over Win32 */
+#else
 #include <unistd.h>
+#endif
 #include <sys/stat.h>   /* mkdir for the scratch/ frame-dump dir */
 #include <fcntl.h>
 

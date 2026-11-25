@@ -1,11 +1,17 @@
 /* main.c – Native PC game entry point (single path: native disk boot) */
 #include "port/port.h"
+#ifdef _WIN32
+#include "platform/win32_compat.h"   /* signal()/SIGINT/SIGTERM differ on Win32 */
+#else
 #include <signal.h>
+#endif
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#ifndef _WIN32
 #include <unistd.h>
+#endif
 #ifdef BENEFACTOR_ANDROID
 #include "platform/android_bridge.h"
 #include <SDL.h>

@@ -11,7 +11,11 @@
 #include "engine/disk_boot.h"
 #include "engine/overlay_load.h"
 #include <setjmp.h>
+#ifdef _WIN32
+#include "platform/win32_compat.h"   /* pthread subset over Win32 */
+#else
 #include <pthread.h>
+#endif
 
 #ifdef HARNESS_BUILD
 #include "harness/trace.h"

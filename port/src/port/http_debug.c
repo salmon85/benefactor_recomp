@@ -22,6 +22,11 @@
 #include "engine/hw.h"
 #include "engine/rt.h"
 
+/* The debug server is POSIX-socket dev tooling; Windows builds get an empty
+ * pc_http_debug_start() from platform/win32_compat.c instead. */
+#ifdef _WIN32
+#else
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -311,3 +316,5 @@ void pc_http_debug_start(void)
     if (pthread_create(&t, NULL, http_thread, NULL) == 0)
         pthread_detach(t);
 }
+
+#endif /* !_WIN32 */

@@ -52,7 +52,16 @@ if(ANDROID)
     endif()
 else()
     find_package(SDL2 REQUIRED)
-    set(BENEFACTOR_SDL_TARGET ${SDL2_LIBRARIES})
+    # Config-mode SDL2 (SDL2_DIR / CMAKE_PREFIX_PATH) exposes imported targets and
+    # may leave SDL2_LIBRARIES empty; prefer the target when it exists. Module-mode
+    # finds (SDK zips, mingw packages) only set SDL2_LIBRARIES.
+    if(TARGET SDL2::SDL2)
+        set(BENEFACTOR_SDL_TARGET SDL2::SDL2)
+    elseif(TARGET SDL2::SDL2-static)
+        set(BENEFACTOR_SDL_TARGET SDL2::SDL2-static)
+    else()
+        set(BENEFACTOR_SDL_TARGET ${SDL2_LIBRARIES})
+    endif()
 endif()
 
 # Vulkan (OPTIONAL — the present-vulkan backend / groundwork). When absent, the
@@ -261,6 +270,13 @@ set(BENEFACTOR_RUNTIME_SOURCES
     ${GAME_SRCS}
     ${GP_GAME_SRCS}
 )
+
+# Windows: swap the POSIX-socket debug server for the Win32 compat layer
+# (pthread subset, alarm/SIGALRM, empty http_debug entry point).
+if(WIN32)
+    list(REMOVE_ITEM BENEFACTOR_RUNTIME_SOURCES src/port/http_debug.c)
+    list(APPEND BENEFACTOR_RUNTIME_SOURCES src/platform/win32_compat.c)
+endif()
 
 if(ANDROID)
     list(APPEND BENEFACTOR_RUNTIME_SOURCES
