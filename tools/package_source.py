@@ -16,8 +16,8 @@ OUT = ROOT / "dist" / "benefactor-re-source.tar.gz"
 INCLUDE_DIRS = {"port", "tools", "tests", "docs", "reports"}
 INCLUDE_FILES = {"TODO.md", "README.md", "LICENSE", "AGENTS.md"}
 EXCLUDE_PARTS = {
-    ".git", "build", "dist", "logs", "scratch", "analysis", "reference",
-    "vendor", "generated", "oracle-disks", "oracle-whdload", "whdload", "kickstart", "__pycache__",
+    ".git", ".venv", "build", "dist", "logs", "scratch", "analysis", "reference",
+    "vendor", "generated", "decomp", "oracle-disks", "oracle-whdload", "whdload", "kickstart", "__pycache__",
 }
 EXCLUDE_SUFFIXES = {
     ".adf", ".zip", ".lha", ".rom", ".bin", ".state", ".o", ".a", ".so",
@@ -33,9 +33,12 @@ def allowed(path: Path) -> bool:
         return False
     if path.name.startswith("Disk."):
         return False
-    if rel.parts[0] not in INCLUDE_DIRS and rel.name not in INCLUDE_FILES:
-        return False
-    return path.is_file()
+    # INCLUDE_FILES are top-level files only (not vendored copies of the same name).
+    if rel.parts[0] in INCLUDE_DIRS:
+        return path.is_file()
+    if len(rel.parts) == 1 and rel.name in INCLUDE_FILES:
+        return path.is_file()
+    return False
 
 
 def main() -> int:

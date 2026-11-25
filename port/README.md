@@ -77,10 +77,16 @@ Full gate results: `../reports/static-recomp-status.md` and
 ## Development harness (optional)
 
 `benefactor-harness` builds only when `vendor/libretro-uae` is present; it is a
-development comparison tool and is not part of the product. It provides PUAE
-lockstep, memory/PCM capture, and `scenedump` for the art-replacement handoff
-(`tools/scene_dump.py`). Neither the vendored oracle nor its outputs are
-distributed.
+development comparison tool and is not part of the product. Clone the fork named
+in `.gitmodules` there to get it:
+
+```sh
+git clone https://github.com/SomeoneIsWorking/libretro-uae vendor/libretro-uae
+```
+
+It provides PUAE lockstep, memory/PCM capture, and `scenedump` for the
+art-replacement handoff (`tools/scene_dump.py`). Neither the vendored oracle nor
+its outputs are distributed.
 
 ## Credits
 
