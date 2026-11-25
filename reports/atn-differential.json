@@ -1,0 +1,342 @@
+[
+  {
+    "disk": "Benefactor (1994)(Psygnosis)(Disk 1 of 3)[cr CLS].adf",
+    "offset": "0x1880",
+    "magic": "ATN!",
+    "output": 446780,
+    "packed": 148476,
+    "xfd_ok": false,
+    "native_ok": false,
+    "same": null
+  },
+  {
+    "disk": "Benefactor (1994)(Psygnosis)(Disk 1 of 3)[cr CLS].adf",
+    "offset": "0x1c80",
+    "magic": "ATN!",
+    "output": 446780,
+    "packed": 146718,
+    "xfd_ok": true,
+    "native_ok": true,
+    "same": true
+  },
+  {
+    "disk": "Benefactor (1994)(Psygnosis)(Disk 1 of 3)[cr CLS].adf",
+    "offset": "0x26670",
+    "magic": "ATN!",
+    "output": 284508,
+    "packed": 189106,
+    "xfd_ok": true,
+    "native_ok": true,
+    "same": true
+  },
+  {
+    "disk": "Benefactor (1994)(Psygnosis)(Disk 1 of 3)[cr CLS].adf",
+    "offset": "0x54ca0",
+    "magic": "ATN!",
+    "output": 10264,
+    "packed": 7400,
+    "xfd_ok": true,
+    "native_ok": true,
+    "same": true
+  },
+  {
+    "disk": "Benefactor (1994)(Psygnosis)(Disk 1 of 3)[cr CLS].adf",
+    "offset": "0x569ba",
+    "magic": "ATN!",
+    "output": 164020,
+    "packed": 74706,
+    "xfd_ok": true,
+    "native_ok": true,
+    "same": true
+  },
+  {
+    "disk": "Benefactor (1994)(Psygnosis)(Disk 1 of 3)[cr CLS].adf",
+    "offset": "0x68dbe",
+    "magic": "ATN!",
+    "output": 174568,
+    "packed": 76224,
+    "xfd_ok": true,
+    "native_ok": true,
+    "same": true
+  },
+  {
+    "disk": "Benefactor (1994)(Psygnosis)(Disk 1 of 3)[cr CLS].adf",
+    "offset": "0x93fee",
+    "magic": "ATN!",
+    "output": 74388,
+    "packed": 67480,
+    "xfd_ok": true,
+    "native_ok": true,
+    "same": true
+  },
+  {
+    "disk": "Benefactor (1994)(Psygnosis)(Disk 1 of 3)[cr CLS].adf",
+    "offset": "0xa47b8",
+    "magic": "ATN!",
+    "output": 102400,
+    "packed": 61048,
+    "xfd_ok": true,
+    "native_ok": true,
+    "same": true
+  },
+  {
+    "disk": "Benefactor (1994)(Psygnosis)(Disk 1 of 3)[cr CLS].adf",
+    "offset": "0xb3662",
+    "magic": "ATN!",
+    "output": 50476,
+    "packed": 29188,
+    "xfd_ok": true,
+    "native_ok": true,
+    "same": true
+  },
+  {
+    "disk": "Benefactor (1994)(Psygnosis)(Disk 1 of 3)[cr CLS].adf",
+    "offset": "0xc098e",
+    "magic": "ATN!",
+    "output": 15750,
+    "packed": 13524,
+    "xfd_ok": true,
+    "native_ok": true,
+    "same": true
+  },
+  {
+    "disk": "Benefactor (1994)(Psygnosis)(Disk 1 of 3)[cr CLS].adf",
+    "offset": "0xc99e7",
+    "magic": "ATN!",
+    "output": 17948,
+    "packed": 15730,
+    "xfd_ok": true,
+    "native_ok": true,
+    "same": true
+  },
+  {
+    "disk": "Benefactor (1994)(Psygnosis)(Disk 2 of 3)[cr CLS].adf",
+    "offset": "0xade2",
+    "magic": "ATN!",
+    "output": 72918,
+    "packed": 65400,
+    "xfd_ok": true,
+    "native_ok": true,
+    "same": true
+  },
+  {
+    "disk": "Benefactor (1994)(Psygnosis)(Disk 2 of 3)[cr CLS].adf",
+    "offset": "0x1ad8c",
+    "magic": "ATN!",
+    "output": 102400,
+    "packed": 43494,
+    "xfd_ok": true,
+    "native_ok": true,
+    "same": true
+  },
+  {
+    "disk": "Benefactor (1994)(Psygnosis)(Disk 2 of 3)[cr CLS].adf",
+    "offset": "0x257a4",
+    "magic": "ATN!",
+    "output": 39090,
+    "packed": 27316,
+    "xfd_ok": true,
+    "native_ok": true,
+    "same": true
+  },
+  {
+    "disk": "Benefactor (1994)(Psygnosis)(Disk 2 of 3)[cr CLS].adf",
+    "offset": "0x32691",
+    "magic": "ATN!",
+    "output": 20690,
+    "packed": 18278,
+    "xfd_ok": true,
+    "native_ok": true,
+    "same": true
+  },
+  {
+    "disk": "Benefactor (1994)(Psygnosis)(Disk 2 of 3)[cr CLS].adf",
+    "offset": "0x4538d",
+    "magic": "ATN!",
+    "output": 84524,
+    "packed": 74702,
+    "xfd_ok": true,
+    "native_ok": true,
+    "same": true
+  },
+  {
+    "disk": "Benefactor (1994)(Psygnosis)(Disk 2 of 3)[cr CLS].adf",
+    "offset": "0x5778d",
+    "magic": "ATN!",
+    "output": 102400,
+    "packed": 44952,
+    "xfd_ok": true,
+    "native_ok": true,
+    "same": true
+  },
+  {
+    "disk": "Benefactor (1994)(Psygnosis)(Disk 2 of 3)[cr CLS].adf",
+    "offset": "0x62757",
+    "magic": "ATN!",
+    "output": 26898,
+    "packed": 16306,
+    "xfd_ok": true,
+    "native_ok": true,
+    "same": true
+  },
+  {
+    "disk": "Benefactor (1994)(Psygnosis)(Disk 2 of 3)[cr CLS].adf",
+    "offset": "0x6ac8e",
+    "magic": "ATN!",
+    "output": 23090,
+    "packed": 20844,
+    "xfd_ok": true,
+    "native_ok": true,
+    "same": true
+  },
+  {
+    "disk": "Benefactor (1994)(Psygnosis)(Disk 2 of 3)[cr CLS].adf",
+    "offset": "0x80cf8",
+    "magic": "ATN!",
+    "output": 73848,
+    "packed": 67352,
+    "xfd_ok": true,
+    "native_ok": true,
+    "same": true
+  },
+  {
+    "disk": "Benefactor (1994)(Psygnosis)(Disk 2 of 3)[cr CLS].adf",
+    "offset": "0x91442",
+    "magic": "ATN!",
+    "output": 102400,
+    "packed": 48870,
+    "xfd_ok": true,
+    "native_ok": true,
+    "same": true
+  },
+  {
+    "disk": "Benefactor (1994)(Psygnosis)(Disk 2 of 3)[cr CLS].adf",
+    "offset": "0x9d35a",
+    "magic": "ATN!",
+    "output": 37022,
+    "packed": 21090,
+    "xfd_ok": true,
+    "native_ok": true,
+    "same": true
+  },
+  {
+    "disk": "Benefactor (1994)(Psygnosis)(Disk 2 of 3)[cr CLS].adf",
+    "offset": "0xa8a37",
+    "magic": "ATN!",
+    "output": 23246,
+    "packed": 20872,
+    "xfd_ok": true,
+    "native_ok": true,
+    "same": true
+  },
+  {
+    "disk": "Benefactor (1994)(Psygnosis)(Disk 2 of 3)[cr CLS].adf",
+    "offset": "0xbf72f",
+    "magic": "ATN!",
+    "output": 79590,
+    "packed": 71084,
+    "xfd_ok": true,
+    "native_ok": true,
+    "same": true
+  },
+  {
+    "disk": "Benefactor (1994)(Psygnosis)(Disk 2 of 3)[cr CLS].adf",
+    "offset": "0xd26eb",
+    "magic": "ATN!",
+    "output": 102400,
+    "packed": 37718,
+    "xfd_ok": false,
+    "native_ok": false,
+    "same": null
+  },
+  {
+    "disk": "Benefactor (1994)(Psygnosis)(Disk 3 of 3)[cr CLS].adf",
+    "offset": "0x678f",
+    "magic": "ATN!",
+    "output": 72560,
+    "packed": 64820,
+    "xfd_ok": true,
+    "native_ok": true,
+    "same": true
+  },
+  {
+    "disk": "Benefactor (1994)(Psygnosis)(Disk 3 of 3)[cr CLS].adf",
+    "offset": "0x164f5",
+    "magic": "ATN!",
+    "output": 102400,
+    "packed": 48122,
+    "xfd_ok": true,
+    "native_ok": true,
+    "same": true
+  },
+  {
+    "disk": "Benefactor (1994)(Psygnosis)(Disk 3 of 3)[cr CLS].adf",
+    "offset": "0x22121",
+    "magic": "ATN!",
+    "output": 40760,
+    "packed": 30718,
+    "xfd_ok": true,
+    "native_ok": true,
+    "same": true
+  },
+  {
+    "disk": "Benefactor (1994)(Psygnosis)(Disk 3 of 3)[cr CLS].adf",
+    "offset": "0x2fc3b",
+    "magic": "ATN!",
+    "output": 7700,
+    "packed": 5306,
+    "xfd_ok": true,
+    "native_ok": true,
+    "same": true
+  },
+  {
+    "disk": "Benefactor (1994)(Psygnosis)(Disk 3 of 3)[cr CLS].adf",
+    "offset": "0x31128",
+    "magic": "ATN!",
+    "output": 200978,
+    "packed": 100442,
+    "xfd_ok": true,
+    "native_ok": true,
+    "same": true
+  },
+  {
+    "disk": "Benefactor (1994)(Psygnosis)(Disk 3 of 3)[cr CLS].adf",
+    "offset": "0x499b4",
+    "magic": "ATN!",
+    "output": 102400,
+    "packed": 37718,
+    "xfd_ok": true,
+    "native_ok": true,
+    "same": true
+  },
+  {
+    "disk": "Benefactor (1994)(Psygnosis)(Disk 3 of 3)[cr CLS].adf",
+    "offset": "0x558cc",
+    "magic": "ATN!",
+    "output": 40768,
+    "packed": 20596,
+    "xfd_ok": true,
+    "native_ok": true,
+    "same": true
+  },
+  {
+    "disk": "Benefactor (1994)(Psygnosis)(Disk 3 of 3)[cr CLS].adf",
+    "offset": "0x60f08",
+    "magic": "ATN!",
+    "output": 23278,
+    "packed": 20906,
+    "xfd_ok": true,
+    "native_ok": true,
+    "same": true
+  },
+  {
+    "disk": "Benefactor (1994)(Psygnosis)(Disk 3 of 3)[cr CLS].adf",
+    "offset": "0x66200",
+    "magic": "ATN!",
+    "output": 125886,
+    "packed": 64474,
+    "xfd_ok": true,
+    "native_ok": true,
+    "same": true
+  }
+]

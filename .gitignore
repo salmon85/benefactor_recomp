@@ -9,3 +9,41 @@
 # Python analysis byproducts.
 __pycache__/
 *.py[cod]
+
+# Local reference clones and proprietary derived material.
+/reference/
+/analysis/
+/opencode-probe.txt
+*.adf
+*.zip
+*.ppm
+
+# Build outputs and generated guest code.
+/port/build/
+/port/src/engine/generated/
+/port/Disk.1
+/port/Disk.2
+/port/Disk.3
+/port/Disk.4
+/port/benefactor.json
+/port/smoke-all-levels.jsonl
+
+# Development oracle inputs/outputs and proprietary support files.
+/port/oracle-disks/
+/port/oracle-whdload/
+/port/whdload/
+/port/kickstart/
+/port/logs/
+/port/scratch/
+/dist/
+
+# Derived artwork/reference captures and third-party oracle source tree.
+/port/vendor/
+/port/analysis/
+/port/screenshots/
+/port/profile.json
+
+# Loose game-derived captures anywhere in the tree.
+*.raw
+*.jsonl
+*.state

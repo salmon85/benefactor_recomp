@@ -1,0 +1,63 @@
+/* pc_config.h — unified config for user-tunable settings.
+ *
+ * A setting is one named knob (e.g. "interact_extend", "modern_controls",
+ * "widescreen"). Its value is resolved with a single, consistent precedence:
+ *
+ *     ENV  >  REPL (session)  >  JSON file  >  caller default
+ *
+ *   - ENV: the canonical env var is BENEFACTOR_<KEY uppercased>, e.g.
+ *     interact_extend -> BENEFACTOR_INTERACT_EXTEND. One rule, always aligned
+ *     with the JSON key (no more bespoke names like PICKUP_RX).
+ *   - REPL: set live at runtime via pc_cfg_set() (harness `cfg <key> <value>`).
+ *     Outranks the file so you can tune without editing/restarting; prefer this.
+ *   - JSON: benefactor.json / $BENEFACTOR_CONFIG, the user-facing persistent knob.
+ *   - default: the caller's fallback.
+ *
+ * Read knobs with pc_cfg_int/pc_cfg_bool (NOT the legacy pc_config_* below, which
+ * are JSON-only primitives kept for the loader internals).
+ */
+#pragma once
+
+void pc_config_load(void);                          /* load benefactor.json / $BENEFACTOR_CONFIG */
+
+/* Unified resolvers (ENV > REPL > JSON > def). Use these for all settings. */
+int  pc_cfg_int (const char *key, int def);
+int  pc_cfg_bool(const char *key, int def);
+void pc_cfg_set (const char *key, const char *val); /* REPL/session override; val=NULL clears */
+/* Resolve to a display string + report which source won ("env"/"repl"/"json"/
+ * "default"). Returns 1 if a value was found (else *src="default", out=""). */
+int  pc_cfg_show(const char *key, char *out, int cap, const char **src);
+/* Persist a knob to the config file (benefactor.json / $BENEFACTOR_CONFIG),
+ * creating the file if needed, and apply it live (session layer). `json_val` is
+ * the raw JSON token to write: `5`, `true`, `"auto"` (quotes included). */
+void pc_cfg_persist(const char *key, const char *json_val);
+
+/* Per-device modern-controls flags (options menu). Each defaults to the legacy
+ * "modern_controls" knob so existing configs keep working. */
+int  pc_modern_kb(void);     /* "modern_controls_keyboard"   */
+int  pc_modern_pad(void);    /* "modern_controls_controller" */
+int  pc_modern_touch(void);  /* "modern_controls_touch" (Android virtual controls) */
+int  pc_modern_any(void);
+/* Declared knobs, for `cfg` with no args (discoverability). */
+int          pc_cfg_count(void);
+const char  *pc_cfg_key (int i);
+const char  *pc_cfg_desc(int i);
+
+/* Frame-renderer mode — WHAT composes the frame (distinct from the present
+ * backend, BENEFACTOR_RENDER=sdl|vulkan, which is only HOW the finished surface
+ * reaches the screen). Resolved from the "renderer" cfg knob:
+ *   "vanilla" — copper-walk bitplane render, Amiga-blit-faithful, 352px.
+ *   "benren"  — the sprite-based draw-list renderer (no Amiga blit). Composes
+ *               natively at any width: 4:3 ("Native") OR widescreen, and is the
+ *               only path that can host post-process effects (see native_effects).
+ * AUTO (knob unset) = benren when a widescreen width is requested, else vanilla,
+ * so existing BENEFACTOR_WIDESCREEN users keep the wide render without also
+ * having to set renderer=benren. The pause OPTIONS "RENDERER" row sets renderer
+ * + widescreen_mode together (Vanilla / Native / Widescreen 16:9 / Auto). */
+typedef enum { PC_RENDER_AUTO = 0, PC_RENDER_VANILLA, PC_RENDER_BENREN } PcRenderMode;
+PcRenderMode pc_render_mode(void);
+
+/* Legacy JSON-only primitives (no ENV/REPL layer). Prefer pc_cfg_* above. */
+int  pc_config_int (const char *key, int def);      /* number, or def if absent  */
+int  pc_config_bool(const char *key, int def);      /* true/false/1/0, or def    */
+int  pc_config_str (const char *key, char *out, int cap); /* quoted string → out; 1 if found */
