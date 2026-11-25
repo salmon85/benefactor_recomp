@@ -1,0 +1,11 @@
+# Proprietary disk images and extracted game data stay local and untracked.
+/disks/
+/extracted/
+/.venv/
+/docs/decomp/
+/analysis/*.bin
+/reports/*.bin
+
+# Python analysis byproducts.
+__pycache__/
+*.py[cod]
