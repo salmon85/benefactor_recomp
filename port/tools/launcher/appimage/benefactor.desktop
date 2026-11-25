@@ -1,0 +1,11 @@
+[Desktop Entry]
+Type=Application
+Name=Benefactor
+GenericName=Platform game
+Comment=Native Benefactor port: pick your disks, build, play
+Exec=AppRun
+Icon=benefactor
+Terminal=false
+Categories=Game;ActionGame;
+Keywords=benefactor;amiga;platformer;
+StartupNotify=true

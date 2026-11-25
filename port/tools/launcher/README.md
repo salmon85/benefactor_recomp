@@ -7,11 +7,30 @@ SDL2 all live inside the kit the launcher downloads.
 
 | Platform | Launcher | Kit |
 |---|---|---|
+| Linux x86_64 | `Benefactor-x86_64.AppImage` | bundled inside the AppImage |
 | Linux x86_64 | `benefactor-launch.sh` | `benefactor-buildkit-linux-x86_64.tar.xz` |
 | Windows x86_64 | `benefactor-launch.ps1` | `benefactor-buildkit-windows-x86_64.zip` |
 
 Both download the source archive and kit from the same GitHub release
 (`v0.2.0`), so run them from a machine with internet access the first time.
+The AppImage is the exception: it carries the source *and* the kit, so it works
+offline.
+
+## AppImage (recommended on Linux)
+
+```sh
+chmod +x Benefactor-x86_64.AppImage
+./Benefactor-x86_64.AppImage                 # file dialogs, then build + play
+./Benefactor-x86_64.AppImage d1.adf d2.adf d3.adf
+./Benefactor-x86_64.AppImage --level 12
+./Benefactor-x86_64.AppImage --rebuild
+```
+
+It works by double-click too (the desktop entry launches it with file dialogs).
+Data (disks, generated code, build, log) goes to
+`~/.local/share/benefactor-launcher/`, so the 528 MB build kit is unpacked only
+inside the AppImage mount and never copied to disk; later launches reuse the
+built binary. The AppImage is 121 MB and needs no network, no root, no packages.
 
 ## You still need the game
 

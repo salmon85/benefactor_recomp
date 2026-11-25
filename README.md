@@ -40,7 +40,13 @@ It asks for the three ADFs, downloads the source and a self-contained build kit
 it. Nothing is installed system-wide.
 
 ```sh
-# Linux x86_64
+# Linux x86_64 — single file, works offline (source + toolchain inside)
+chmod +x Benefactor-x86_64.AppImage
+./Benefactor-x86_64.AppImage
+```
+
+```sh
+# Linux x86_64 — small script that downloads the kit on first run
 chmod +x benefactor-launch.sh
 ./benefactor-launch.sh
 ```

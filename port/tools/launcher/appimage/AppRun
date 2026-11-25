@@ -1,0 +1,201 @@
+#!/bin/bash
+# AppRun for the Benefactor AppImage.
+#
+# Everything needed to build is inside the AppImage (toolchain kit + source).
+# The launcher asks for the three CLS ADFs, builds the game into the user's data
+# directory, and runs it. No network access and no system packages required.
+set -euo pipefail
+
+APPDIR="${APPDIR:-$(cd "$(dirname "$(readlink -f "$0")")" && pwd)}"
+DATA="${BENEFACTOR_LAUNCHER_HOME:-${XDG_DATA_HOME:-$HOME/.local/share}/benefactor-launcher}"
+KIT="$APPDIR/kit"
+SRC_ARCHIVE="$APPDIR/source.tar.gz"
+LOG="$DATA/launcher.log"
+DISKS_DIR="$DATA/disks"
+SRC_DIR="$DATA/src"
+BUILD="$SRC_DIR/port/build"
+BIN="$BUILD/benefactor-pc"
+
+KNOWN_DISKS=(
+  0b7bc60dacc4ab66bb582c51d8fd12181693749f05ac49b7d7acbc31eeee9b71
+  2acbe50c90ad2302d97eaa0d18fa9eb6f8c15548817142676eb3960cb4ecd2be
+  afa4b06727dbf7c0d75649d4737bc832dbbb4ff95cf8c0bdd20a37260cb25b2a
+)
+
+FORCE=0
+ANY_DISKS=0
+GAME_ARGS=()
+ADF_ARGS=()
+while [ $# -gt 0 ]; do
+  case "$1" in
+    --rebuild)   FORCE=1; shift ;;
+    --any-disks) ANY_DISKS=1; shift ;;
+    --level|--load)
+      [ $# -ge 2 ] || { echo "--$1 needs a value" >&2; exit 2; }
+      GAME_ARGS+=("$1" "$2"); shift 2 ;;
+    *) if [ -f "$1" ]; then ADF_ARGS+=("$1"); else GAME_ARGS+=("$1"); fi; shift ;;
+  esac
+done
+
+have_gui() { [ -n "${DISPLAY:-}${WAYLAND_DISPLAY:-}" ] && command -v zenity >/dev/null 2>&1; }
+say() { printf '[benefactor] %s\n' "$*" >&2; }
+die() {
+  printf '[benefactor] %s\n' "$*" >&2
+  if have_gui; then
+    zenity --error --title="Benefactor" --width=520 \
+           --text="$*\n\nLog: $LOG" 2>/dev/null || true
+  fi
+  exit 1
+}
+
+mkdir -p "$DATA" "$DISKS_DIR"
+: > "$LOG"
+
+progress_start() {
+  if have_gui; then
+    zenity --progress --pulsate --no-cancel --auto-close --title="Benefactor" \
+           --width=420 --text="$1" >/dev/null 2>&1 &
+    PROGRESS_PID=$!
+    disown || true
+  fi
+}
+progress_text() {
+  if have_gui && [ -n "${PROGRESS_PID:-}" ]; then
+    # zenity --progress can't be updated after start in pulsate mode; re-launch.
+    kill "$PROGRESS_PID" 2>/dev/null || true
+    zenity --progress --pulsate --no-cancel --auto-close --title="Benefactor" \
+           --width=420 --text="$1" >/dev/null 2>&1 &
+    PROGRESS_PID=$!
+    disown || true
+  fi
+  say "$1"
+}
+progress_stop() {
+  if [ -n "${PROGRESS_PID:-}" ]; then
+    kill "$PROGRESS_PID" 2>/dev/null || true
+    PROGRESS_PID=""
+  fi
+}
+
+pick_file() {
+  local title="$1" path=""
+  if have_gui; then
+    path=$(zenity --file-selection --title="$title" \
+                  --file-filter='Amiga disk images (*.adf) | *.adf' \
+                  --file-filter='All files | *' 2>/dev/null) || true
+  elif [ -n "${DISPLAY:-}" ] && command -v kdialog >/dev/null 2>&1; then
+    path=$(kdialog --title "$title" --getopenfilename . '*.adf' 2>/dev/null) || true
+  fi
+  if [ -z "$path" ] && [ -t 0 ]; then
+    read -r -e -p "$title: " path || true
+  fi
+  [ -n "$path" ] || die "$title was cancelled. Pass three .adf paths as arguments to skip the dialogs."
+  printf '%s\n' "${path/#\~/$HOME}"
+}
+
+collect_disks() {
+  local have=0 d
+  for d in 1 2 3; do [ -f "$DISKS_DIR/Disk.$d" ] && have=$((have + 1)); done
+  if [ "$have" -eq 3 ] && [ "$FORCE" -eq 0 ] && [ "${#ADF_ARGS[@]}" -eq 0 ]; then
+    say "using the disks already stored in $DISKS_DIR"
+    return 0
+  fi
+
+  local src=()
+  if [ "${#ADF_ARGS[@]}" -ge 3 ]; then
+    src=("${ADF_ARGS[0]}" "${ADF_ARGS[1]}" "${ADF_ARGS[2]}")
+  else
+    for d in 1 2 3; do
+      src+=("$(pick_file "Select Benefactor Disk $d of 3 (.adf)")")
+    done
+  fi
+
+  local i
+  for i in 0 1 2; do
+    local path="${src[$i]}"
+    [ -f "$path" ] || die "not a file: $path"
+    local size sum
+    size=$(stat -c %s "$path")
+    sum=$(sha256sum "$path" | cut -d' ' -f1)
+    if [ "$size" -ne 901120 ]; then
+      die "Disk.$((i + 1)) is $size bytes; a standard 901120-byte ADF is required (pass --any-disks to try anyway)"
+    fi
+    if [ "$sum" != "${KNOWN_DISKS[$i]}" ] && [ "$ANY_DISKS" -ne 1 ]; then
+      die "Disk.$((i + 1)) is not the TOSEC CLS image this loader expects.
+Expected: Benefactor (1994)(Psygnosis)(Disk $((i + 1)) of 3)[cr CLS].adf
+sha256: $sum"
+    fi
+    cp -f "$path" "$DISKS_DIR/Disk.$((i + 1))"
+  done
+  say "disks verified and stored in $DISKS_DIR"
+}
+
+ensure_source() {
+  local want stamp
+  want=$(sha256sum "$SRC_ARCHIVE" | cut -d' ' -f1)
+  if [ -f "$SRC_DIR/port/CMakeLists.txt" ] && [ -f "$DATA/source.sha256" ] \
+     && [ "$(cat "$DATA/source.sha256")" = "$want" ] && [ "$FORCE" -eq 0 ]; then
+    return 0
+  fi
+  progress_text "Unpacking game sources"
+  rm -rf "$SRC_DIR"
+  mkdir -p "$SRC_DIR"
+  tar xzf "$SRC_ARCHIVE" -C "$SRC_DIR" || die "cannot extract bundled source"
+  printf '%s\n' "$want" > "$DATA/source.sha256"
+}
+
+build_game() {
+  local py="$KIT/python/bin/python3"
+  local cmake="$KIT/cmake/bin/cmake"
+  local zigcc="$KIT/bin/zigcc"
+  [ -x "$py" ] && [ -x "$cmake" ] && [ -x "$zigcc" ] || die "AppImage is damaged: build kit missing"
+
+  cp -f "$DISKS_DIR"/Disk.* "$SRC_DIR/port/"
+
+  progress_text "Translating the game's 68000 code from your disks"
+  ( cd "$SRC_DIR/port" && "$py" tools/regen.py --cc "$zigcc" --python "$py" ) >>"$LOG" 2>&1 \
+    || die "bank translation failed"
+
+  progress_text "Building Benefactor (a few minutes on the first run)"
+  (
+    cd "$SRC_DIR/port"
+    export PATH="$KIT/cmake/bin:$KIT/python/bin:$KIT/bin:$PATH"
+    export LD_LIBRARY_PATH="$KIT/sdl2/lib${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
+    "$cmake" -S . -B build -G Ninja -DCMAKE_BUILD_TYPE=Release \
+      -DCMAKE_C_COMPILER="$zigcc" \
+      -DSDL2_DIR="$KIT/sdl2/lib/cmake/SDL2" \
+      -DSDL2_INCLUDE_DIR="$KIT/sdl2/include/SDL2" \
+      -DSDL2_LIBRARY="$KIT/sdl2/lib/libSDL2.so" \
+      "-DCMAKE_BUILD_RPATH=\$ORIGIN" >>"$LOG" 2>&1 || exit 1
+    "$cmake" --build build -j"$(nproc)" >>"$LOG" 2>&1 || exit 1
+  ) || die "build failed"
+  [ -x "$BIN" ] || die "build produced no binary"
+
+  # Keep the built game runnable on its own: SDL2 lives next to the executable.
+  cp -f "$KIT/sdl2/lib/libSDL2-2.0.so.0" "$BUILD/" 2>/dev/null || true
+  printf '%s\n' "$(sha256sum "$SRC_ARCHIVE" | cut -d' ' -f1)" > "$DATA/build.sha256"
+}
+
+main() {
+  say "data directory: $DATA"
+  collect_disks
+  ensure_source
+  if [ "$FORCE" -eq 1 ] || [ ! -x "$BIN" ] \
+     || [ ! -f "$DATA/build.sha256" ] \
+     || [ "$(cat "$DATA/build.sha256")" != "$(sha256sum "$SRC_ARCHIVE" | cut -d' ' -f1)" ]; then
+    progress_start "Preparing Benefactor"
+    trap progress_stop EXIT
+    build_game
+    progress_stop
+    trap - EXIT
+  else
+    say "game already built (use --rebuild to force)"
+  fi
+
+  cp -f "$DISKS_DIR"/Disk.* "$SRC_DIR/port/" 2>/dev/null || true
+  cd "$SRC_DIR/port"
+  say "starting Benefactor"
+  exec ./build/benefactor-pc Disk.1 Disk.2 Disk.3 "${GAME_ARGS[@]}"
+}
+
+main

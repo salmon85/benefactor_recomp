@@ -54,6 +54,16 @@ that starts, loads a level, and then dies with a bogus indirect call
 (`rt_call: NO FUNCTION at $000000`) or SIGILL. Always pass
 `-target x86_64-linux-gnu`; the kit's `bin/zigcc` wrapper does.
 
+## AppImage
+
+`appimage/build-appimage.sh` stages an AppDir (AppRun, desktop entry, generated
+icon, `source.tar.gz`, the whole kit), trims the kit's docs/tests, and calls
+`appimagetool` (`ARCH=x86_64 APPIMAGE_EXTRACT_AND_RUN=1`, `--no-appstream`).
+Result: ~121 MB squashfs containing source + toolchain; the launcher never
+downloads anything at runtime. Data goes to `~/.local/share/benefactor-launcher`.
+
+The icon is drawn by `appimage/make-icon.py` (original artwork, no game assets).
+
 ## Rebuilding the kits
 
 ```sh
